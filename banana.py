@@ -142,6 +142,8 @@ button_load = st.button("Load file(s)")
 
 # --- Process file ---
 if raw_file is not None and button_load:
+    print("Loading file(s)")
+    print(f"raw_file: {raw_file}")
     tmp_file_names, progress_bar = preprocess_files(raw_file)
     progress_bar.progress(0.2, "Processing file(s) ...")
     c = load_cell(
