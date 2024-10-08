@@ -1,8 +1,11 @@
-streamlit
-pandas
-numpy
-matplotlib
-streamlit
-cellpy==1.0.2a6
-plotly
-seaborn
+channels:
+    - conda-forge
+dependencies:
+    - pandas
+    - numpy
+    - matplotlib
+    - streamlit
+    - plotly
+    - seaborn
+    - pip:
+        - cellpy==1.0.2a6
