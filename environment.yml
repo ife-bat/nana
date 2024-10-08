@@ -1,8 +1,8 @@
 channels:
     - conda-forge
 dependencies:
-    - pandas
-    - numpy
+    - pandas>=2.2
+    - numpy>=2
     - matplotlib
     - streamlit
     - plotly
