@@ -47,7 +47,6 @@ area = cell_settings.number_input(
 def plot(c, do_cycle_plot=True, do_summary_plot=True, interactive=True):
     if do_cycle_plot:
         # --- Plotting ---
-        st.divider()
         fig_cycles = plotutils.plot_cycles(
             c,
             ylim=[0, 1.05],
@@ -60,15 +59,14 @@ def plot(c, do_cycle_plot=True, do_summary_plot=True, interactive=True):
         if interactive:
             st.plotly_chart(
                 fig_cycles,
-                # use_container_width=True,
-                theme=None,
+                use_container_width=True,
+                # theme=None,
             )
         else:
             st.pyplot(fig_cycles)
 
     if do_summary_plot:
         # --- Plotting ---
-        st.divider()
         fig_summary = plotutils.summary_plot(
             c,
             interactive=interactive,
@@ -77,12 +75,10 @@ def plot(c, do_cycle_plot=True, do_summary_plot=True, interactive=True):
         if interactive:
             st.plotly_chart(
                 fig_summary,
-                # use_container_width=True,
-                theme=None,
+                use_container_width=True,
+                # theme=None,
             )
         else:
-            print("plotting summary")
-            print(type(fig_summary))
             st.pyplot(fig_summary)
 
 
@@ -144,8 +140,6 @@ raw_file = st.file_uploader(
 )
 button_load = st.button("Load file(s)")
 
-st.divider()
-
 # --- Process file ---
 if raw_file is not None and button_load:
     tmp_file_names, progress_bar = preprocess_files(raw_file)
@@ -167,12 +161,13 @@ if raw_file is not None and button_load:
 
 # --- Plotting ---
 if "c" in st.session_state:
-    plot_settings = st.expander("Plot settings", expanded=True)
-    do_cycle_plot = plot_settings.checkbox("Plot cycles", value=True)
-    do_summary_plot = plot_settings.checkbox("Plot summary", value=True)
-    interactive = plot_settings.checkbox("Interactive plots", value=True)
+    with st.form("plotting_form"):
+        plot_settings = st.expander("Plot settings", expanded=True)
+        do_cycle_plot = plot_settings.checkbox("Plot cycles", value=True)
+        do_summary_plot = plot_settings.checkbox("Plot summary", value=True)
+        interactive = plot_settings.checkbox("Interactive plots", value=True)
 
-    button_plot = st.button("Plot")
+        button_plot = st.form_submit_button("Plot")
 
     if button_plot:
         if "c" not in st.session_state:
