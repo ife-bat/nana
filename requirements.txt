@@ -1,0 +1,7 @@
+pandas==2.0.1
+numpy==1.24.3
+matplotlib
+streamlit
+plotly
+seaborn
+cellpy==1.0.2a6
