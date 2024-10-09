@@ -12,7 +12,7 @@ from cellpy.utils import plotutils
 DEVELOPER_MODE = False
 c = None
 
-st.title("(ba)nana :sunglasses:")
+st.title(":banana: nana :banana:")
 
 
 # --- File settings ---
@@ -186,6 +186,7 @@ if raw_file is not None and button_load:
 
 # --- Plotting ---
 if "c" in st.session_state:
+    button_plot = False
     with st.form("plotting_form"):
         plot_settings = st.expander("Plot settings", expanded=True)
         do_cycle_plot = plot_settings.checkbox("Plot cycles", value=True)
