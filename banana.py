@@ -44,42 +44,65 @@ area = cell_settings.number_input(
 )
 
 
-def plot(c, do_cycle_plot=True, do_summary_plot=True, interactive=True):
+def plot(
+    c,
+    do_cycle_plot=True,
+    do_summary_plot=True,
+    interactive=True,
+    xlim=None,
+    ylim=None,
+    formation_cycles=3,
+    **kwargs,
+):
     if do_cycle_plot:
-        # --- Plotting ---
-        fig_cycles = plotutils.plot_cycles(
-            c,
-            ylim=[0, 1.05],
-            xlim=[-100, 2100],
-            formation_cycles=3,
-            colormap="Blues_r",
-            interactive=interactive,
-            return_figure=True,
-        )
-        if interactive:
-            st.plotly_chart(
-                fig_cycles,
-                use_container_width=True,
-                # theme=None,
-            )
-        else:
-            st.pyplot(fig_cycles)
+        xlim = cycle_plot(c, interactive, xlim, ylim, formation_cycles, **kwargs)
 
     if do_summary_plot:
         # --- Plotting ---
-        fig_summary = plotutils.summary_plot(
-            c,
-            interactive=interactive,
-            return_data=False,
+        summary_plot(c, interactive, **kwargs)
+
+
+def summary_plot(c, interactive, **kwargs):
+    fig_summary = plotutils.summary_plot(
+        c,
+        interactive=interactive,
+        return_data=False,
+        **kwargs,
+    )
+    if interactive:
+        st.plotly_chart(
+            fig_summary,
+            use_container_width=True,
+            # theme=None,
         )
-        if interactive:
-            st.plotly_chart(
-                fig_summary,
-                use_container_width=True,
-                # theme=None,
-            )
-        else:
-            st.pyplot(fig_summary)
+    else:
+        st.pyplot(fig_summary)
+
+
+def cycle_plot(c, interactive, xlim, ylim, formation_cycles, **kwargs):
+    if xlim is None:
+        xlim = [-100, 2100]
+    if ylim is None:
+        ylim = [0, 1.05]
+
+    fig_cycles = plotutils.plot_cycles(
+        c,
+        ylim=ylim,
+        xlim=xlim,
+        formation_cycles=formation_cycles,
+        colormap="Blues_r",
+        interactive=interactive,
+        return_figure=True,
+        **kwargs,
+    )
+    if interactive:
+        st.plotly_chart(
+            fig_cycles,
+            use_container_width=True,
+            # theme=None,
+        )
+    else:
+        st.pyplot(fig_cycles)
 
 
 @st.cache_data
@@ -168,17 +191,23 @@ if "c" in st.session_state:
         do_cycle_plot = plot_settings.checkbox("Plot cycles", value=True)
         do_summary_plot = plot_settings.checkbox("Plot summary", value=True)
         interactive = plot_settings.checkbox("Interactive plots", value=True)
-
         button_plot = st.form_submit_button("Plot")
 
     if button_plot:
         if "c" not in st.session_state:
             st.error("No cell loaded")
         else:
+            xlim = None
+            ylim = None
+            formation_cycles = 3
             c = st.session_state["c"]
-            plot(
-                c,
-                do_cycle_plot=do_cycle_plot,
-                do_summary_plot=do_summary_plot,
-                interactive=interactive,
-            )
+            if do_cycle_plot:
+                cycle_plot(
+                    c,
+                    interactive=interactive,
+                    xlim=xlim,
+                    ylim=ylim,
+                    formation_cycles=formation_cycles,
+                )
+            if do_summary_plot:
+                summary_plot(c, interactive=interactive)
